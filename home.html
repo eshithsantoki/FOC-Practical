@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attendance Performance System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2ff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+            text-align: center;
+        }
+
+        h2 {
+            color: #4b3cc4;
+            font-size: 21px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4936c8;
+        }
+
+        button {
+            background-color: #4936c8;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            margin: 8px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        button:hover {
+            background-color: #3526a0;
+        }
+
+        #result {
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.9;
+        }
+
+        .warning {
+            color: #dc2626;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #dc2626;
+            font-size: 13px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Attendance Performance System</h2>
+
+        <p>Enter student details below</p>
+
+        <form id="attendanceForm">
+
+            <input
+                type="number"
+                id="attendance"
+                placeholder="Enter attendance percentage"
+                min="0"
+                max="100"
+                step="any"
+                required
+            >
+
+            <input
+                type="number"
+                id="marks"
+                placeholder="Enter marks (0-100)"
+                min="0"
+                max="100"
+                step="any"
+                required
+            >
+
+            <button type="submit">Predict Performance</button>
+
+        </form>
+
+        <div id="result" aria-live="polite"></div>
+
+    </div>
+
+    <script>
+        const form = document.getElementById("attendanceForm");
+        const result = document.getElementById("result");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const attendanceInput =
+                document.getElementById("attendance").value;
+
+            const marksInput =
+                document.getElementById("marks").value;
+
+            const attendance = Number(attendanceInput);
+            const marks = Number(marksInput);
+
+            // Validate the entered values
+            if (
+                attendanceInput.trim() === "" ||
+                marksInput.trim() === "" ||
+                !Number.isFinite(attendance) ||
+                !Number.isFinite(marks) ||
+                attendance < 0 ||
+                attendance > 100 ||
+                marks < 0 ||
+                marks > 100
+            ) {
+                result.className = "error";
+                result.textContent =
+                    "Please enter valid values between 0 and 100.";
+                return;
+            }
+
+            // Predict performance based on marks
+            let performance;
+
+            if (marks >= 85) {
+                performance = "Excellent 🌟";
+            } else if (marks >= 70) {
+                performance = "Good 👍";
+            } else if (marks >= 50) {
+                performance = "Average";
+            } else {
+                performance = "Poor ⚠️";
+            }
+
+            // Check attendance percentage
+            let attendanceMessage;
+
+            if (attendance < 75) {
+                attendanceMessage =
+                    '<span class="warning">' +
+                    'Attendance Warning: Below 75%!' +
+                    '</span>';
+            } else {
+                attendanceMessage =
+                    '<span class="success">' +
+                    'Attendance is satisfactory.' +
+                    '</span>';
+            }
+
+            // Display the results
+            result.className = "";
+
+            result.innerHTML =
+                "Attendance: " + attendance + "%<br>" +
+                "Marks: " + marks + "<br>" +
+                "Predicted Performance: " + performance + "<br>" +
+                attendanceMessage;
+        });
+    </script>
+
+</body>
+</html>
